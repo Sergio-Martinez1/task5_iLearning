@@ -24,7 +24,7 @@ export default function Home() {
       threshold: 1.0,
     };
 
-    const callback = (entries) => {
+    const callback: IntersectionObserverCallback = (entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           fetch(`/api/users?offset=${offset}&limit=10&region=${region}&seed=${seed}&errors=${errors}`)
