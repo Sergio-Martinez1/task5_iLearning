@@ -2,15 +2,16 @@
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import randomIcon from './static/random-svgrepo-com.svg';
 import Image from 'next/image';
+import {type User } from './libs/User'
 
 export default function Home() {
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState<User[]>([]);
   const [offset, setOffset] = useState(20);
   const [region, setRegion] = useState('en');
   const [seed, setSeed] = useState(Math.ceil(Math.random() * Number.MAX_SAFE_INTEGER));
   const [errors, setErrors] = useState(0)
   const [loading, setLoading] = useState(false)
-  const [timer, setTimer] = useState(null)
+  const [timer, setTimer] = useState<NodeJS.Timeout | null>(null)
   const [sliderValue, setSliderValue] = useState(0)
   const [fieldValue, setFieldValue] = useState(0)
   const loadingRef = useRef(null);
@@ -60,7 +61,7 @@ export default function Home() {
       });
   }, [region, seed, errors])
 
-  function asignRegion(event: ChangeEvent) {
+  function asignRegion(event: ChangeEvent<HTMLSelectElement>) {
     let table = document.querySelector('#table')
     if (table) {
       table.scroll(0, 0)
@@ -68,12 +69,12 @@ export default function Home() {
     setRegion(event.target.value)
   }
 
-  function asignSeed(event: ChangeEvent) {
+  function asignSeed(event: ChangeEvent<HTMLInputElement>) {
     let table = document.querySelector('#table')
     if (table) {
       table.scroll(0, 0)
     }
-    setSeed(event.target.value);
+    setSeed(Number(event.target.value));
   };
 
   function randomSeed() {
@@ -84,7 +85,7 @@ export default function Home() {
     setSeed(Math.ceil(Math.random() * Number.MAX_SAFE_INTEGER));
   }
 
-  function slide(event: ChangeEvent) {
+  function slide(event: ChangeEvent<HTMLInputElement>) {
     if (timer) clearTimeout(timer)
     let table = document.querySelector('#table')
     if (table) {
@@ -101,7 +102,7 @@ export default function Home() {
     }
   }
 
-  function changeError(event: ChangeEvent) {
+  function changeError(event: ChangeEvent<HTMLInputElement>) {
     if (timer) clearTimeout(timer)
     let table = document.querySelector('#table')
     if (table) {
@@ -138,7 +139,7 @@ export default function Home() {
         <label className='flex gap-x-2 justify-center items-center'>
           Seed:
           <input type="number" className='border-white border-[2px] w-56 p-1 bg-black' value={seed} onChange={(event) => { asignSeed(event) }} />
-          <button onClick={(event) => { randomSeed(event) }}><Image priority src={randomIcon} alt='Random' /></button>
+          <button onClick={(event) => { randomSeed() }}><Image priority src={randomIcon} alt='Random' /></button>
         </label>
       </div>
       <section id='table' className="grid grid-flow-row w-full flex-grow overflow-y-auto text-sm">
